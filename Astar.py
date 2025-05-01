@@ -91,7 +91,7 @@ def makeGraph_from_csv(nodes_file, edges_file):
             if len(row) != 3:
                 continue
             node_id, lat, lon = row
-            node_coords[node_id] = (float(lat), float(lon))  # x=lon, y=lat
+            node_coords[node_id] = (float(lon), float(lat))  # x=lon, y=lat
 
     # Map node IDs to graph vertex indices
     node_names = list(node_coords.keys())

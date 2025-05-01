@@ -4,27 +4,26 @@ from urllib.parse import quote_plus
 
 def visualization(Graph, path):
     route = build_route_from_path(Graph, path)
-    encoded = polyline.encode(route)
+    print(route)
+    from gmplot import GoogleMapPlotter
 
-    params = {
-    'size': '640x480',
-    'maptype': 'roadmap',
-    # draw a blue, 5-px wide line following the encoded route:
-    'path': f"enc:{encoded}|color:0x0000ff|weight:5",
-    'key': 'AIzaSyA3BHlhNoO2e6w4URB8aCf5Orc1A4Rcw7s'
-    }
-    
-    url = (
-    "https://maps.googleapis.com/maps/api/staticmap?"
-    + "&".join(f"{k}={quote_plus(v)}" for k, v in params.items())
-    )
+    # Center the map at the first point
+    start_lat, start_lng = route[0]
 
-    resp = requests.get(url)
-    resp.raise_for_status()
-    with open("route_map.png", "wb") as f:
-        f.write(resp.content)
+    gmap = GoogleMapPlotter(start_lat, start_lng, zoom=14, apikey="AIzaSyA3BHlhNoO2e6w4URB8aCf5Orc1A4Rcw7s")
 
-    print("Saved route_map.png")
+    # Unzip to two lists: lats, lngs
+    lats, lngs = zip(*route)
+
+    # Draw the route as a red line of width 3
+    gmap.plot(lats, lngs, color='red', edge_width=3)
+
+    # Optionally put markers at each waypoint
+    gmap.scatter(lats, lngs, color='blue', size=20, marker=True)
+
+    # Write out an HTML file you can open in your browser
+    gmap.draw("route.html")
+    print("Open route.html in your browser to see the map.")
     return 
 
 def build_route_from_path(graph, path):
