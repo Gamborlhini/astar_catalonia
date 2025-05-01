@@ -59,44 +59,49 @@ def h_reduced_length(edge, a, b, t) :
 def h(v, t):
     return ((v["coord"][0]-t["coord"][0])** 2 + (v["coord"][1]-t["coord"][1]) ** 2) ** .5
 
-def makeGraph(text):
+def makeGraph_from_csv(nodes_file, edges_file):
+    import csv
+    import math
+    from igraph import Graph
+
     node_coords = {}
     edges = []
     weights = []
 
-    parsing_edges = False
-
-    with open(text, "r") as file:
-        for line in file:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                if "edges" in line.lower():
-                    parsing_edges = True
+    # Load node coordinates
+    with open(nodes_file, "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if len(row) != 3:
                 continue
+            node_id, lat, lon = row
+            node_coords[node_id] = (float(lon), float(lat))  # x=lon, y=lat
 
-            parts = line.split()
-
-            if not parsing_edges:
-                # Parse nodes: name x y
-                name, x, y = parts
-                node_coords[name] = (float(x), float(y))
-            else:
-                # Parse edges: source target weight
-                src, tgt, weight = parts
-                edges.append((src, tgt))
-                weights.append(float(weight))
-
-    # Build graph
+    # Map node IDs to graph vertex indices
     node_names = list(node_coords.keys())
     name_to_index = {name: i for i, name in enumerate(node_names)}
-    indexed_edges = [(name_to_index[src], name_to_index[tgt]) for src, tgt in edges]
     coords = [node_coords[name] for name in node_names]
 
+    # Load edges and compute weights
+    with open(edges_file, "r") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if len(row) != 2:
+                continue
+            src, tgt = row[0].strip(), row[1].strip()
+            if src in node_coords and tgt in node_coords:
+                edges.append((name_to_index[src], name_to_index[tgt]))
+                x1, y1 = node_coords[src]
+                x2, y2 = node_coords[tgt]
+                dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+                weights.append(dist)
+
+    # Build the graph
     g = Graph(directed=True)
     g.add_vertices(len(node_names))
     g.vs["name"] = node_names
     g.vs["coord"] = coords
-    g.add_edges(indexed_edges)
+    g.add_edges(edges)
     g.es["weight"] = weights
 
     return g
