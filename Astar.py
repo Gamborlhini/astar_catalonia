@@ -63,8 +63,16 @@ def h_reduced_length(edge, a, b, t) :
     print(str (edge["weight"] - h(a,t)/120 + h(b,t)/120) + "   " + str (edge["weight"]) + "   " + str (h(a,t)/120) + "   " +  str (h(b,t)/120) )
     return (edge["weight"]) - h(a,t)/120 + h(b,t)/120
 
-def h(v, t):
+def euclidianDist(v, t):
     return ((v["coord"][0]-t["coord"][0])** 2 + (v["coord"][1]-t["coord"][1]) ** 2) ** .5
+
+
+def h(v, t):
+    lon1 = v["coord"][0]
+    lat1 = v["coord"][1]
+    lon2 = t["coord"][0]
+    lat2 = t["coord"][1]
+    return haversine_np(lon1, lat1, lon2, lat2)
 
 def makeGraph_from_csv(nodes_file, edges_file):
     import csv
@@ -163,3 +171,23 @@ def reconstruct_path(predicesor, end):
         path.append(end)
         end = predicesor[end]
     return path[::-1]  # reverse
+
+def haversine_np(lon1, lat1, lon2, lat2):
+    import math
+    """
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees)
+    Reference:
+        https://stackoverflow.com/a/29546836/7657658
+    """
+    lon1, lat1, lon2, lat2 = map(math.radians, [lon1, lat1, lon2, lat2])
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = math.sin(
+        dlat / 2.0)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2.0)**2
+
+    c = 2 * math.arcsin(math.sqrt(a))
+    km = 6371 * c
+    return km
