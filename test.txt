@@ -1,5 +1,17 @@
-Barcelona Madrid 5
-Barcelona A 3
-A Madrid 5
-B Madrid 7
-Barcelona B 2
+# Nodes
+Barcelona 0 1
+A 2 2
+B 4 2
+C 2 0
+D 4 0
+Madrid 6 1
+
+# Edges
+Barcelona A 30
+Barcelona C 50
+A B 100
+A C 20
+B Madrid 40
+C D 70
+D B 100
+D Madrid 40
