@@ -1,2 +1,4 @@
 cataluna-latest.osm.pbf
 .idea/*
+
+__pycache__/
