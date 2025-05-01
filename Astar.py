@@ -23,8 +23,6 @@ def Astar(graph, start, end):
     i = 0
     # main loop of Astar, the "lets make a deal sectio"
     while any(v not in Found and dd[v] < float("inf") for v in dd):
-        print(i)
-        i += 1
         #selects the argmin v in dd that has not been found yet
         v, v_dist = dd.popitem()
         #puts v in found
@@ -89,14 +87,14 @@ def makeGraph_from_csv(nodes_file, edges_file):
     with open(edges_file, "r") as f:
         reader = csv.reader(f)
         for row in reader:
-            if len(row) != 2:
+            if len(row) != 3:
                 continue
-            src, tgt = row[0].strip(), row[1].strip()
+            src, tgt, speed = row[0].strip(), row[1].strip(), row[2].strip()
             if src in node_coords and tgt in node_coords:
                 edges.append((name_to_index[src], name_to_index[tgt]))
                 x1, y1 = node_coords[src]
                 x2, y2 = node_coords[tgt]
-                dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+                dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2) / speed
                 weights.append(dist)
 
     # Build the graph
