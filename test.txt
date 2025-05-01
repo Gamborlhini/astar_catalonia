@@ -1,0 +1,5 @@
+Barcelona Madrid 5
+Barcelona A 3
+A Madrid 5
+B Madrid 7
+Barcelona B 2
