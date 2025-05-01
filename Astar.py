@@ -5,6 +5,7 @@ from heapdict import heapdict
 # and the edges have weights. Also have input of start and end nodes.
 #Output is shortest path dist, while printing the path
 def Astar(graph, start, end):
+    
     #Initialize found nodes and distance of each node from start
     Found = []
     dd = heapdict()
@@ -20,18 +21,21 @@ def Astar(graph, start, end):
     for vertex in graph.vs:
         predicesor[vertex["name"]] = None
 
-    i = 0
     # main loop of Astar, the "lets make a deal sectio"
     while any(v not in Found and dd[v] < float("inf") for v in dd):
         #selects the argmin v in dd that has not been found yet
         v, v_dist = dd.popitem()
         #puts v in found
         Found.append(v)
+        print("FOUND " + v)
 
         #checks if it is our target, and if so returns, and prints path
         if v == end:
-            print_path(end, predicesor, end)
-            return true_cost[end]  
+            path = reconstruct_path(predicesor, end)
+            print(" → ".join(path))
+            total_weight = sum_edge_weights(graph, path)
+            total_dist = sum_edge_dist(graph, path)
+            return total_weight, total_dist
         
         # gets a list of all incident edges of the v we found
         v_index = graph.vs.find(name=v).index
@@ -55,7 +59,9 @@ def Astar(graph, start, end):
 
 
 def h_reduced_length(edge, a, b, t) :
-    return edge["weight"] - h(a,t) + h(b,t)
+    print(a["name"] + "=  wight - ha + hb") 
+    print(str (edge["weight"] - h(a,t) + h(b,t)) + "   " + str (edge["weight"]) + "   " + str (h(a,t)) + "   " +  str (h(b,t)) )
+    return (edge["weight"]*120) - h(a,t) + h(b,t)
 
 def h(v, t):
     return ((v["coord"][0]-t["coord"][0])** 2 + (v["coord"][1]-t["coord"][1]) ** 2) ** .5
@@ -64,6 +70,7 @@ def makeGraph_from_csv(nodes_file, edges_file):
     import csv
     import math
     from igraph import Graph
+
 
     node_coords = {}
     edges = []
@@ -76,7 +83,7 @@ def makeGraph_from_csv(nodes_file, edges_file):
             if len(row) != 3:
                 continue
             node_id, lat, lon = row
-            node_coords[node_id] = (float(lon), float(lat))  # x=lon, y=lat
+            node_coords[node_id] = (float(lat), float(lon))  # x=lon, y=lat
 
     # Map node IDs to graph vertex indices
     node_names = list(node_coords.keys())
@@ -90,6 +97,8 @@ def makeGraph_from_csv(nodes_file, edges_file):
             if len(row) != 3:
                 continue
             src, tgt, speed = row[0].strip(), row[1].strip(), row[2].strip()
+            
+            speed = parse_speed(speed)
             if src in node_coords and tgt in node_coords:
                 edges.append((name_to_index[src], name_to_index[tgt]))
                 x1, y1 = node_coords[src]
@@ -115,3 +124,42 @@ def print_path(end, predicesor, final):
             print(end + "--->")
         else:
             print(end)
+
+
+def parse_speed(speed_str):
+    try:
+        return int(speed_str)
+    except ValueError:
+        return speed_limit.get(speed_str)
+    
+def speed_limit(code):
+    speed_defaults = {
+        "ES:urban": 50,
+        "ES:rural": 90,
+        "ES:motorway": 120
+    }
+    return speed_defaults.get(code, 50)  # default = 50
+
+def sum_edge_weights(graph, path):
+    total = 0
+    for i in range(len(path) - 1):
+        source = graph.vs.find(name=path[i]).index
+        target = graph.vs.find(name=path[i+1]).index
+        edge = graph.get_eid(source, target)
+        total += graph.es[edge]["weight"]
+    return total
+
+def sum_edge_dist(graph, path):
+    total = 0
+    for i in range(len(path) - 1):
+        source = graph.vs.find(name=path[i])
+        target = graph.vs.find(name=path[i+1])
+        total += h(source, target)
+    return total
+
+def reconstruct_path(predicesor, end):
+    path = []
+    while end is not None:
+        path.append(end)
+        end = predicesor[end]
+    return path[::-1]  # reverse
