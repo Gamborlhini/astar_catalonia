@@ -94,7 +94,7 @@ def makeGraph_from_csv(nodes_file, edges_file):
                 edges.append((name_to_index[src], name_to_index[tgt]))
                 x1, y1 = node_coords[src]
                 x2, y2 = node_coords[tgt]
-                dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2) / speed
+                dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2) / int (speed)
                 weights.append(dist)
 
     # Build the graph
