@@ -60,8 +60,8 @@ def Astar(graph, start, end):
 
 def h_reduced_length(edge, a, b, t) :
     print(a["name"] + "=  wight - ha + hb") 
-    print(str (edge["weight"] - h(a,t) + h(b,t)) + "   " + str (edge["weight"]) + "   " + str (h(a,t)) + "   " +  str (h(b,t)) )
-    return (edge["weight"]*120) - h(a,t) + h(b,t)
+    print(str (edge["weight"] - h(a,t)/120 + h(b,t)/120) + "   " + str (edge["weight"]) + "   " + str (h(a,t)/120) + "   " +  str (h(b,t)/120) )
+    return (edge["weight"]) - h(a,t)/120 + h(b,t)/120
 
 def h(v, t):
     return ((v["coord"][0]-t["coord"][0])** 2 + (v["coord"][1]-t["coord"][1]) ** 2) ** .5
