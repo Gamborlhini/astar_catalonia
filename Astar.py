@@ -1,34 +1,52 @@
 from igraph import Graph
 from heapdict import heapdict
 
+#Input is Network of vertices and edges, where the vertices have euclidian coord
+# and the edges have weights. Also have input of start and end nodes.
+#Output is shortest path dist, while printing the path
 def Astar(graph, start, end):
+    #Initialize found nodes and distance of each node from start
     Found = []
     dd = heapdict()
-    for vertex in graph.vs:
-        if vertex["name"] != start:
-            dd[vertex["name"]] = float("inf")
-    dd[start] = 0
+    # True-costs (initialize all to infinity except for start)
+    true_cost = {v["name"]: float("inf") for v in graph.vs}
+    true_cost[start] = 0
 
+    # Make a min heap starting with start vertex
+    dd[start] = h(graph.vs.find(name=start), graph.vs.find(name=end)) 
+
+    #Initialize predicesor function
     predicesor = {}
     for vertex in graph.vs:
         predicesor[vertex["name"]] = None
 
+    # main loop of Astar, the "lets make a deal sectio"
     while any(v not in Found and dd[v] < float("inf") for v in dd):
+        #selects the argmin v in dd that has not been found yet
         v, v_dist = dd.popitem()
+        #puts v in found
         Found.append(v)
 
+        #checks if it is our target, and if so returns, and prints path
         if v == end:
             print_path(end, predicesor, end)
-            return v_dist  
+            return true_cost[end]  
         
+        # gets a list of all incident edges of the v we found
         v_index = graph.vs.find(name=v).index
         edge_ids = graph.incident(v_index, mode="OUT")
+        
+        # iterates through all, and will update distance of which, using the reduced h heuristic
         for eid in edge_ids:
             edge = graph.es[eid]
             w = graph.vs[edge.target]["name"]
             if w not in Found:
-                if v_dist + h_reduced_length(edge,graph.vs.find(name=v),graph.vs.find(name=w),graph.vs.find(name=end)) < dd[w]:
-                    dd[w] = v_dist + h_reduced_length(edge,graph.vs.find(name=v),graph.vs.find(name=w),graph.vs.find(name=end))
+                v_vertex = graph.vs.find(name=v)
+                end_vertex = graph.vs.find(name=end)
+                w_vertex = graph.vs.find(name=w)
+                if true_cost[v] + h_reduced_length(edge,v_vertex,w_vertex,end_vertex) < true_cost[w]:
+                    true_cost[w] = true_cost[v] + h_reduced_length(edge,v_vertex,w_vertex,end_vertex)
+                    dd[w] = true_cost[v] + h_reduced_length(edge,v_vertex,w_vertex,end_vertex)
                     predicesor[w] = v
     return dd[end]
 
