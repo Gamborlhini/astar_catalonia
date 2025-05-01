@@ -35,7 +35,7 @@ def Astar(graph, start, end):
             print(" → ".join(path))
             total_weight = sum_edge_weights(graph, path)
             total_dist = sum_edge_dist(graph, path)
-            return total_weight, total_dist
+            return total_weight, total_dist, path
         
         # gets a list of all incident edges of the v we found
         v_index = graph.vs.find(name=v).index
@@ -111,7 +111,7 @@ def makeGraph_from_csv(nodes_file, edges_file):
                 edges.append((name_to_index[src], name_to_index[tgt]))
                 x1, y1 = node_coords[src]
                 x2, y2 = node_coords[tgt]
-                dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2) / int (speed)
+                dist = haversine_np(x1,y1,x2,y2) / int (speed)
                 weights.append(dist)
 
     # Build the graph
@@ -138,7 +138,7 @@ def parse_speed(speed_str):
     try:
         return int(speed_str)
     except ValueError:
-        return speed_limit.get(speed_str)
+        return speed_limit(speed_str)
     
 def speed_limit(code):
     speed_defaults = {
@@ -188,6 +188,6 @@ def haversine_np(lon1, lat1, lon2, lat2):
     a = math.sin(
         dlat / 2.0)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2.0)**2
 
-    c = 2 * math.arcsin(math.sqrt(a))
+    c = 2 * math.asin(math.sqrt(a))
     km = 6371 * c
     return km
