@@ -99,7 +99,7 @@ def makeGraph_from_csv(nodes_file, edges_file):
     # Build the graph
     g = Graph(directed=True)
     g.add_vertices(len(node_names))
-    g.vs["name"] = node_names
+    g.vs["name"] = str (node_names)
     g.vs["coord"] = coords
     g.add_edges(edges)
     g.es["weight"] = weights
