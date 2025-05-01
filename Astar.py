@@ -20,8 +20,11 @@ def Astar(graph, start, end):
     for vertex in graph.vs:
         predicesor[vertex["name"]] = None
 
+    i = 0
     # main loop of Astar, the "lets make a deal sectio"
     while any(v not in Found and dd[v] < float("inf") for v in dd):
+        print(i)
+        i += 1
         #selects the argmin v in dd that has not been found yet
         v, v_dist = dd.popitem()
         #puts v in found
@@ -48,7 +51,7 @@ def Astar(graph, start, end):
                     true_cost[w] = true_cost[v] + h_reduced_length(edge,v_vertex,w_vertex,end_vertex)
                     dd[w] = true_cost[v] + h_reduced_length(edge,v_vertex,w_vertex,end_vertex)
                     predicesor[w] = v
-    return dd[end]
+    print("NO PATH WAS FOUND")
 
 
 
@@ -99,7 +102,7 @@ def makeGraph_from_csv(nodes_file, edges_file):
     # Build the graph
     g = Graph(directed=True)
     g.add_vertices(len(node_names))
-    g.vs["name"] = str (node_names)
+    g.vs["name"] = node_names
     g.vs["coord"] = coords
     g.add_edges(edges)
     g.es["weight"] = weights
