@@ -1,10 +1,7 @@
-import requests
-import polyline
-from urllib.parse import quote_plus
+from gmplot import GoogleMapPlotter
 
 def visualization(Graph, path, Found,predicesor, true_cost):
     route = build_route_from_path(Graph, path)
-    from gmplot import GoogleMapPlotter
 
     # Center the map at the first point
     start_lat, start_lng = route[0]
