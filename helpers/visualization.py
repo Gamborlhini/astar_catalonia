@@ -3,10 +3,10 @@ import os
 
 def visualization(Graph, path, Found,predicesor, true_cost):
     route = build_route_from_path(Graph, path)
-    api_key = os.environ.get("GOOGLE_MAPS_API_KEY")
+
     # Center the map at the first point
     start_lat, start_lng = route[0]
-
+    api_key = os.environ['GOOGLE_MAPS_API_KEY']
     gmap = GoogleMapPlotter(start_lat, start_lng, zoom=14, apikey=api_key)
 
     # Unzip to two lists: lats, lngs
