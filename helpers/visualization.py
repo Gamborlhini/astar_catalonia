@@ -31,7 +31,7 @@ def visualization(Graph, path, Found,predicesor, true_cost):
     gmap.plot(lats, lngs, color='red', edge_width=8,z_index=10)
 
     # Optionally put markers at each waypoint
-    gmap.scatter(lats, lngs, color='blue', size=20, marker=True)
+    # gmap.scatter(lats, lngs, color='blue', size=20, marker=True)
 
     # Write out an HTML file you can open in your browser
     gmap.draw("route.html")
