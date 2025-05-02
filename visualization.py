@@ -4,7 +4,6 @@ from urllib.parse import quote_plus
 
 def visualization(Graph, path):
     route = build_route_from_path(Graph, path)
-    print(route)
     from gmplot import GoogleMapPlotter
 
     # Center the map at the first point

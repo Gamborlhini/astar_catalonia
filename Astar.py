@@ -27,7 +27,6 @@ def Astar(graph, start, end):
         v, v_dist = dd.popitem()
         #puts v in found
         Found.append(v)
-        print("FOUND " + v)
 
         #checks if it is our target, and if so returns, and prints path
         if v == end:
@@ -59,8 +58,6 @@ def Astar(graph, start, end):
 
 
 def h_reduced_length(edge, a, b, t) :
-    print(a["name"] + "=  wight - ha + hb") 
-    print(str (edge["weight"] - h(a,t)/120 + h(b,t)/120) + "   " + str (edge["weight"]) + "   " + str (h(a,t)/120) + "   " +  str (h(b,t)/120) )
     return (edge["weight"]) - h(a,t)/120 + h(b,t)/120
 
 def euclidianDist(v, t):
