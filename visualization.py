@@ -14,12 +14,6 @@ def visualization(Graph, path, Found,predicesor, true_cost):
     # Unzip to two lists: lats, lngs
     lats, lngs = zip(*route)
 
-    # Draw the route as a red line of width 3
-    gmap.plot(lats, lngs, color='red', edge_width=3)
-
-    # Optionally put markers at each waypoint
-    gmap.scatter(lats, lngs, color='blue', size=20, marker=True)
-
     plotted = set(path)
     while any(v not in plotted for v in Found):
         candidates = [v for v in Found if v not in plotted]
@@ -29,11 +23,17 @@ def visualization(Graph, path, Found,predicesor, true_cost):
         subroute = build_route_from_path(Graph, subpath)
         sublats, sublngs = zip(*subroute)
 
-        gmap.plot(sublats, sublngs, color='purple', edge_width=3)
+        gmap.plot(sublats, sublngs, color='purple', edge_width=3, z_index=1)
 
         # <-- use update (or .add for a single node) on your set:
         plotted.update(subpath)
 
+
+    # Draw the route as a red line of width 4
+    gmap.plot(lats, lngs, color='red', edge_width=8,z_index=10)
+
+    # Optionally put markers at each waypoint
+    gmap.scatter(lats, lngs, color='blue', size=20, marker=True)
 
     # Write out an HTML file you can open in your browser
     gmap.draw("route.html")
