@@ -11,10 +11,10 @@ end = input("Where do you want to go?\n")
 graph = Astar.makeGraph_from_csv("cataluna_nodes.csv", "cataluna_edges.csv")
 print(graph.vs["name"])
 
-time, dist, path = Astar.Astar(graph,start,end)
+time, dist, path, Found, predicesor, true_cost = Astar.Astar(graph,start,end)
 print("Total time in minutes is: " + str(time * 60))
 print("Total distance in km is: " + str(dist))
-visualization.visualization(graph, path)
+visualization.visualization(graph, path, Found, predicesor, true_cost)
 
 
 

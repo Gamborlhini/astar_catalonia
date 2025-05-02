@@ -34,7 +34,7 @@ def Astar(graph, start, end):
             print(" → ".join(path))
             total_weight = sum_edge_weights(graph, path)
             total_dist = sum_edge_dist(graph, path)
-            return total_weight, total_dist, path
+            return total_weight, total_dist, path, Found, predicesor, true_cost
         
         # gets a list of all incident edges of the v we found
         v_index = graph.vs.find(name=v).index
